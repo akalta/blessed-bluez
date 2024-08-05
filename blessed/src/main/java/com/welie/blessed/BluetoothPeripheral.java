@@ -161,6 +161,8 @@ public final class BluetoothPeripheral {
         }
 
         private void successfullyConnected() {
+        	if (deviceName.isEmpty())
+        			deviceName = device.getName();
             final long timePassed = System.currentTimeMillis() - connectTimestamp;
             isBonded = isPaired();
             logger.info(String.format("connected to '%s' (%s) in %.1fs", deviceName, isBonded ? "BONDED" : "BOND_NONE", timePassed / 1000.0f));
@@ -382,7 +384,8 @@ public final class BluetoothPeripheral {
         logger.info(String.format("force disconnect '%s' (%s)", getName(), getAddress()));
         gattCallback.onConnectionStateChanged(DISCONNECTING, COMMAND_SUCCESS);
         if (device != null) {
-            device.disconnect();
+        	if (device.disconnect())
+        		gattCallback.onConnectionStateChanged(DISCONNECTED, COMMAND_SUCCESS);
         }
     }
 

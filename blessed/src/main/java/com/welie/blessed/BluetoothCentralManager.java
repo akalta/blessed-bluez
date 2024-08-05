@@ -215,6 +215,9 @@ public class BluetoothCentralManager {
         this.bluetoothCentralManagerCallback = Objects.requireNonNull(bluetoothCentralManagerCallback, "no valid bluetoothCallback provided");
         this.scanOptions = Objects.requireNonNull(scanOptions, "no scanOptions provided");
         this.adapter = Objects.requireNonNull(bluezAdapter, "no bluez adapter provided");
+        
+        // Set Pairable to false to be able to connect to BluVib
+        this.adapter.setPairable(false);
 
         logger.info(String.format("using adapter %s", adapter.getDeviceName()));
 
@@ -226,7 +229,7 @@ public class BluetoothCentralManager {
         }
 
         try {
-            setupPairingAgent();
+            //setupPairingAgent();
             BluezSignalHandler.getInstance().addCentral(this);
         } catch (Exception ignore) {
         }
@@ -264,7 +267,8 @@ public class BluetoothCentralManager {
 //                "NoInputNoOutput" and "KeyboardDisplay" which
 //                reflects the input and output capabilities of the
 //                agent.
-            agentManager.registerAgent(agent, "KeyboardOnly");
+			//TODO change to KeyboardOnly if pairing is enabled
+            agentManager.registerAgent(agent, "NoInputNoOutput");
             agentManager.requestDefaultAgent(agent);
         }
     }
